@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Jurusan;
+use PHPUnit\TextUI\XmlConfiguration\Logging\Junit;
 
 class JurusanController extends Controller
 {
@@ -36,7 +38,20 @@ class JurusanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'nama_jurusan' => 'required',
+        ]);
+        if ($validate->fails()) {
+            return response()->json($validate->errors()->toJson());
+        }
+        $create = Jurusan::create([
+            'nama_jurusan' => $request->nama_jurusan,
+        ]);
+        if ($create) {
+            return response()->json(['status' => true, 'message' => 'Sukses menambah data jurusan.']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Gagal menambah data jurusan.']);
+        }
     }
 
     /**
@@ -70,7 +85,20 @@ class JurusanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'nama_jurusan' => 'required'
+        ]);
+        if ($validate->fails()) {
+            return response()->json($validate->errors()->toJson());
+        }
+        $update = Jurusan::where('id', $id)->update([
+            'nama_jurusan' => $request->get('nama_jurusan')
+        ]);
+        if ($update) {
+            return response()->json(['status' => true, 'message' => 'Sukses mengubah data jurusan.']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Gagal mengubah data jurusan.']);
+        }
     }
 
     /**
@@ -81,6 +109,16 @@ class JurusanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Jurusan::where('id', $id)->delete();
+        if ($delete) {
+            return response()->json(['status' => true, 'message' => 'Sukses menghapus data jurusan.']);
+        }
+        return response()->json(['status' => true, 'message' => 'Gagal menghapus data jurusan.']);
+    }
+
+    public function search($id)
+    {
+        $result = Jurusan::where('id', '=', $id)->get();
+        return response()->json($result);
     }
 }

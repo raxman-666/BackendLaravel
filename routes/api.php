@@ -34,3 +34,7 @@ Route::patch('buku/{id}', [BukuController::class, 'update']);
 Route::delete('buku/{id}', [BukuController::class, 'destroy']);
 
 Route::get('jurusan', [JurusanController::class, 'index']);
+Route::get('jurusan/{id}', [JurusanController::class, 'search']);
+Route::post('jurusan', [JurusanController::class, 'store']);
+Route::patch('jurusan/{id}', [JurusanController::class, 'update']);
+Route::delete('jurusan/{id}', [JurusanController::class, 'destroy']);
